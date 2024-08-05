@@ -47,6 +47,10 @@ fi
 echo "SSH host public key(s):"
 cat /config/ssh_host_keys/ssh_host_*.pub
 
+# disable pam
+sed -i "s/^UsePAM yes/UsePAM no/g" /etc/ssh/sshd_config
+echo "sshd pam login disabled"
+
 # custom port
 if [[ -n "${LISTEN_PORT}" ]]; then
     sed -i "s/^#Port [[:digit:]]\+/Port ${LISTEN_PORT}"/ /etc/ssh/sshd_config
