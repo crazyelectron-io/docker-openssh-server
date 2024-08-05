@@ -5,6 +5,8 @@
 mkdir -p \
     /config/{.ssh,ssh_host_keys,logs/openssh}
 
+TCP_FORWARDING=${TCP_FORWARDING:-"true"}
+
 USER_NAME=${USER_NAME:-linuxserver.io}
 echo "User name is set to $USER_NAME"
 
@@ -54,6 +56,15 @@ else
     sed -i "s/^#Port [[:digit:]]\+/Port 2222"/ /etc/ssh/sshd_config
     sed -i "s/^Port [[:digit:]]\+/Port 2222"/ /etc/ssh/sshd_config
     echo "sshd is listening on port 2222"
+fi
+
+# tcp forwarding (to support remote ssh for vscode)
+if [[ "$TCP_FORWARDING" == "true" ]]; then
+    sed -i "s/^.*AllowTcpForwarding.*/AllowTcpForwarding yes"/ /etc/ssh/sshd_config
+    echo "sshd allows tcp forwarding"
+else
+    sed -i "s/^.*AllowTcpForwarding.*/AllowTcpForwarding no"/ /etc/ssh/sshd_config
+    echo "sshd tcp forwarding is disabled"
 fi
 
 # password access

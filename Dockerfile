@@ -15,6 +15,7 @@ RUN \
   apt-get install -y \
     logrotate \
     nano \
+    net-tools \
     openssh-server \
     sudo && \
   printf "Linuxserver.io version: ${VERSION}\nBuild-date: ${BUILD_DATE}" > /build_version && \
@@ -24,6 +25,10 @@ RUN \
   rm -rf \
     /tmp/* \
     $HOME/.cache
+
+# Create the privilege separation directory and fix permissions
+RUN mkdir -p /run/sshd \
+    && chmod 775 /run/sshd
 
 # add local files
 COPY /root /
